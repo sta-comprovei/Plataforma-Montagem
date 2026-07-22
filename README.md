@@ -90,16 +90,29 @@ Isso gera a pasta `dist/`. Arraste ela em **Netlify → Add new site → Deploy 
 
 ## Banco de dados
 
-1. Crie as tabelas base (`empresas`, `usuarios`, `importacoes`, `alertas`,
-   `auditoria`, `integracoes`, `indicadores_diarios`, `previa_cargas`,
-   `valores_referencia_rotas`, `mapeamento_rotas`, `acumulado_por_codigo_rota`
-   etc.) no SQL Editor do seu projeto Supabase, se ainda não tiver rodado.
-2. Rode `montaview-migracao-auth.sql` — ele liga `usuarios` ao Supabase Auth
+Em um projeto Supabase **novo/vazio**, rode os dois arquivos nesta ordem, no
+SQL Editor:
+
+1. **`montaview-schema-supabase.sql`** — cria as tabelas
+   (`empresas`, `usuarios`, `importacoes`, `alertas`, `auditoria`,
+   `integracoes`, `indicadores_diarios`, `previa_cargas`,
+   `valores_referencia_rotas`, `mapeamento_rotas`, `acumulado_por_codigo_rota`),
+   os índices e constraints, e habilita RLS em todas (sem nenhuma policy
+   ainda — tudo fica bloqueado por padrão até o passo 2).
+2. **`montaview-migracao-auth.sql`** — liga `usuarios` ao Supabase Auth
    (`auth.users`) por foreign key, cria as políticas de RLS por empresa e o
    trigger que sincroniza automaticamente a criação de usuário no Auth com o
-   perfil em `usuarios` (e a empresa, no primeiro cadastro). Pode ser
-   executado mais de uma vez sem erro (todos os `drop ... if exists` são
-   idempotentes).
+   perfil em `usuarios` (e a empresa, no primeiro cadastro).
+
+Os dois arquivos são idempotentes — podem ser executados mais de uma vez sem
+erro (`create table if not exists`, `drop ... if exists`, `create or replace`
+em tudo que precisa).
+
+⚠️ `montaview-schema-supabase.sql` foi reconstruído a partir do código (não
+a partir de um dump real do banco em produção) — se você já tem um projeto
+Supabase rodando com essas tabelas, **não rode esse arquivo nele**; ele é só
+para provisionar um projeto novo do zero. Para conferir contra o schema
+real, exporte com `npx supabase db dump --schema public`.
 
 ## O que ficou de fora / limitações conhecidas
 
