@@ -862,16 +862,21 @@ async function carregarUsuarios() {
 function renderUsuarios(usuarios, busca = "") {
   const filtrados = usuarios.filter(u => u.nome.toLowerCase().includes(busca.toLowerCase()) || u.email.toLowerCase().includes(busca.toLowerCase()));
   const usuarioLogadoId = getUsuario()?.id;
+  // Só o Usuário Master gerencia a equipe — RLS já bloqueia no banco
+  // (quem não é Master só enxerga a própria linha e não pode excluir
+  // ninguém), isto aqui só evita mostrar botões que sempre falhariam.
+  const souMaster = getUsuario()?.perfil === "USUARIO_MASTER";
   setConteudo(`
     <div style="display:flex;justify-content:space-between;margin-bottom:16px;gap:12px;">
       <input id="busca-usuario" placeholder="Buscar por nome ou e-mail..." value="${busca}" style="max-width:280px;" />
-      <button id="btn-novo-usuario" class="btn-primary">+ Novo usuário</button>
+      ${souMaster ? `<button id="btn-novo-usuario" class="btn-primary">+ Novo usuário</button>` : ""}
     </div>
     <div class="table-wrap"><table><thead><tr><th>Usuário</th><th>Perfil</th><th>Departamento</th><th>Status</th><th></th></tr></thead>
     <tbody>${filtrados.map(u => `<tr><td>${u.nome}<div style="font-size:11.5px;color:var(--muted);">${u.email}</div></td><td>${u.perfil}</td><td>${u.departamento??"—"}</td>
       <td><span class="pill" style="background:${u.status==="ATIVO"?"#2BC4B01F":"#5C68841F"};color:${u.status==="ATIVO"?"#2BC4B0":"var(--muted)"};">${u.status}</span></td>
-      <td>${u.id === usuarioLogadoId ? `<span style="font-size:11px;color:var(--muted);">você</span>` : `<button data-excluir-usuario="${u.id}" style="color:var(--red);font-size:12px;">🗑</button>`}</td></tr>`).join("")}
-    </tbody></table></div>`);
+      <td>${u.id === usuarioLogadoId ? `<span style="font-size:11px;color:var(--muted);">você</span>` : (souMaster ? `<button data-excluir-usuario="${u.id}" style="color:var(--red);font-size:12px;">🗑</button>` : "")}</td></tr>`).join("")}
+    </tbody></table></div>
+    ${souMaster ? "" : `<p style="font-size:11.5px;color:var(--muted);margin-top:12px;">Só o Usuário Master gerencia a equipe.</p>`}`);
 
   document.getElementById("busca-usuario")?.addEventListener("input", (e) => renderUsuarios(usuarios, e.target.value));
   document.getElementById("btn-novo-usuario")?.addEventListener("click", () => abrirModalNovoUsuario());

@@ -224,9 +224,16 @@ end $$;
 -- automaticamente pro schema "public" (é assim que o painel funciona sem
 -- pedir GRANT manual) — isso aqui só GARANTE que valem também se você
 -- estiver rodando num Postgres/Supabase self-hosted ou customizado onde
--- esse valor padrão não tenha sido aplicado. É seguro por si só: quem
--- decide o que cada um pode realmente ver/gravar continuam sendo as
--- policies de RLS (criadas em montaview-migracao-auth.sql), não este GRANT.
+-- esse valor padrão não tenha sido aplicado.
+--
+-- ⚠️ De propósito SÓ select/insert/update/delete — NUNCA "all"/"truncate".
+-- TRUNCATE não é filtrado por RLS (é tudo-ou-nada, ignora as policies por
+-- linha); se "anon"/"authenticated" tivessem essa permissão, qualquer
+-- pessoa com a anon key (que é pública, vai no bundle do site) conseguiria
+-- apagar TODAS as linhas de qualquer tabela de uma vez, de qualquer
+-- empresa, sem precisar nem estar autenticada. Quem decide o que cada um
+-- pode realmente ver/gravar linha a linha continuam sendo as policies de
+-- RLS (criadas em montaview-migracao-auth.sql).
 grant usage on schema public to anon, authenticated;
-grant all on all tables in schema public to anon, authenticated;
-alter default privileges in schema public grant all on tables to anon, authenticated;
+grant select, insert, update, delete on all tables in schema public to anon, authenticated;
+alter default privileges in schema public grant select, insert, update, delete on tables to anon, authenticated;

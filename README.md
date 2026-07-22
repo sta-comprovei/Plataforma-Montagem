@@ -47,6 +47,18 @@ index.html
   (`handle_new_user`) disparado logo após o Supabase Auth criar o usuário —
   isso garante que nunca existe um usuário no Auth sem o perfil
   correspondente.
+- **Gerenciar usuários é restrito ao Usuário Master**: RLS em `usuarios`
+  permite que cada um veja só o próprio perfil (necessário pro login), e só
+  quem já é `USUARIO_MASTER` enxerga/edita a equipe inteira ou apaga
+  colegas — sem isso, qualquer usuário autenticado da empresa conseguiria se
+  auto-promover a Master via UPDATE direto.
+- **Convite de colega usa uma tabela `convites`** (RLS: só o Master grava
+  ali) em vez de mandar perfil/empresa/departamento como metadata do
+  `signUp()` — `signUp` é uma chamada pública (só precisa da anon key,
+  que é pública no bundle do site), então confiar nesse dado permitiria que
+  qualquer pessoa se autodeclarasse Master de uma empresa alheia sem nunca
+  ter feito login. O trigger só cria o perfil se achar um convite pendente
+  com o mesmo e-mail, e usa os dados de lá (confiáveis).
 
 ## O que NÃO fica mais no localStorage
 
