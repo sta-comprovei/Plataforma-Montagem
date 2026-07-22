@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg:#0B1220; --surface:#0E1626; --card:#121B2E; --border:#223052;
+    --text:#E8ECF4; --muted:#8B96AC; --muted2:#5C6884;
+    --amber:#F2A93B; --amber-dark:#e59d2f; --cyan:#2BC4B0; --red:#F0483E;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
+  .font-display { font-family:'Space Grotesk',sans-serif; }
+  .font-mono { font-family:'JetBrains Mono',monospace; }
+  #app { width:100%; min-height:100vh; }
+  input, select, button, textarea { font-family:inherit; }
+  input, select { width:100%; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:13.5px; color:var(--text); outline:none; }
+  input:focus, select:focus { border-color:var(--amber); box-shadow:0 0 0 2px rgba(242,169,59,.25); }
+  button { cursor:pointer; border:none; font-size:13px; background:none; color:inherit; }
+  label.fl { display:block; font-size:12px; font-weight:500; color:var(--muted); margin-bottom:6px; }
+  .btn-primary { background:var(--amber); color:var(--bg); font-weight:600; border-radius:8px; padding:10px 14px; transition:background .15s; }
+  .btn-primary:hover { background:var(--amber-dark); }
+  .btn-primary:disabled { opacity:.4; cursor:not-allowed; }
+  .link-amber { color:var(--amber); }
+  .link-amber:hover { text-decoration:underline; }
+  .card { background:var(--surface); border:1px solid #182238; border-radius:12px; padding:20px; }
+  .pulse-strip { display:flex; align-items:flex-end; gap:3px; }
+  .pulse-bar { width:3px; border-radius:999px; background:var(--amber); animation:pulseBar 1.4s ease-in-out infinite; transform-origin:bottom; }
+  @keyframes pulseBar { 0%,100%{opacity:.35;transform:scaleY(.6);} 50%{opacity:1;transform:scaleY(1);} }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .spin { animation:spin 1s linear infinite; display:inline-block; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  thead tr { background:var(--surface); color:var(--muted); text-align:left; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.05em; }
+  th, td { padding:12px 16px; }
+  tbody tr:nth-child(even) { background:rgba(14,22,38,.4); }
+  .table-wrap { border:1px solid #182238; border-radius:12px; overflow:hidden; }
+  .pill { display:inline-flex; align-items:center; gap:6px; padding:2px 8px; border-radius:999px; font-size:11.5px; font-family:'JetBrains Mono',monospace; }
+  .dot { width:6px; height:6px; border-radius:999px; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:50; }
+  .modal-box { background:var(--card); border:1px solid var(--border); border-radius:12px; width:100%; max-width:380px; padding:20px; }
+  .toggle { width:38px; height:22px; border-radius:999px; position:relative; transition:background .15s; cursor:pointer; }
+  .toggle-knob { width:16px; height:16px; border-radius:999px; background:#fff; position:absolute; top:3px; transition:left .15s; }
+  input[type=range] { -webkit-appearance:none; background:transparent; }
+  input[type=range]::-webkit-slider-runnable-track { height:4px; background:var(--border); border-radius:999px; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; margin-top:-6px; width:16px; height:16px; border-radius:999px; background:var(--amber); border:2px solid var(--bg); cursor:pointer; }
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-thumb { background:#223052; border-radius:999px; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .grid-5 { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
